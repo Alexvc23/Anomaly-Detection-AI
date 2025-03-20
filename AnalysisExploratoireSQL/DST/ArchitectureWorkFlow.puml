@@ -1,0 +1,59 @@
+@startuml
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor #LightGoldenRodYellow
+  BorderColor #DarkSlateGray
+  RoundCorner 15
+}
+skinparam package {
+  BackgroundColor #AliceBlue
+  BorderColor #4169E1
+}
+skinparam cloud {
+  BackgroundColor #F5F5F5
+  BorderColor #888888
+}
+skinparam node {
+  BackgroundColor #F0F8FF
+  BorderColor #888888
+}
+skinparam arrow {
+  Thickness 2
+}
+
+rectangle "On-Premises Network" as onprem {
+  rectangle "Local PostgreSQL\n(Port 5432)" as postgres
+}
+
+cloud "VPN or ExpressRoute" as vpn
+
+rectangle "Azure Subscription" as azSub {
+  package "Resource Group: my-aml-rg" as rg {
+    package "Virtual Network: my-aml-vnet\n(10.0.0.0/16)" as vnet {
+      
+      rectangle "Subnets\n(NSGs, ACLs, etc.)" as subnets
+      
+      rectangle "Azure ML Workspace\n(Private Endpoints)" as aml
+      rectangle "Azure Key Vault\n(Secrets)" as kv
+      rectangle "Azure ML Compute Cluster\n(Training / Batch Jobs)" as amlcompute
+      rectangle "Batch Endpoint\n(secured by VNet)" as batch_endpoint
+    }
+  }
+}
+
+' Connections
+onprem --> vpn : "Secure Tunnel"
+vpn --> vnet : "VPN/ExpressRoute"
+
+' Relationship between AML workspace, compute, and endpoints
+aml -[hidden]-> amlcompute
+aml -[hidden]-> kv
+aml -[hidden]-> batch_endpoint
+
+' Show a private endpoint relationship
+aml -- kv : "Private Endpoint\n(Secrets Access)"
+
+' Show how the Batch Endpoint might access PostgreSQL over the VPN
+batch_endpoint --> postgres : "5432\nDB Connection"
+
+@enduml

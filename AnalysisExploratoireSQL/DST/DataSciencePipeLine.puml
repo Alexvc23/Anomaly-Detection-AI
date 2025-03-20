@@ -1,0 +1,46 @@
+@startuml
+' Diagram flow: top-to-bottom
+skinparam componentBackgroundColor LightBlue
+skinparam componentBorderColor DarkBlue
+skinparam componentFontColor Black
+skinparam arrowColor Black
+top to bottom direction
+
+' -- (1) Simple grouping with "package" blocks --
+package "Data Preparation" {
+ 
+  component RAW  as "1. Raw Data Collection\n(T_COMTE_RENDU)\n\nCollect raw data" #LightYellow
+  component PROC as "2. Data Processing\n\nIntegrate & standardize" #LightGreen
+  component CLEAN as "3. Data Cleaning\n\nHandle missing & inconsistent values" #LightCoral
+  component EDA  as "4. Exploratory Data Analysis\n\nFind patterns & anomalies" #LightCyan
+ 
+}
+ note as NoteDP #LightGrey
+  "**Most of the time, we will spend working in this part of the pipeline.**"
+  end note
+ NoteDP .. "Data Preparation"
+
+package "Model Building" {
+  component TRAIN as "5. ML Model Training\n(multiple models)\n\nTrain algorithms" #Lavender
+  component EVAL  as "6. Evaluation & Model Choice\n\nCompare performance metrics" #Thistle
+}
+
+package "Delivery" {
+  component DEPLOY as "7. Deployment\n\nPut the chosen model into production" #LightPink
+  component MAINT  as "8. Maintenance\n\nMonitor & retrain as needed" #MistyRose
+}
+
+' -- (2) Connect the nodes with arrows (the flow) --
+RAW  --> PROC : "Prepare data"
+PROC --> CLEAN : "Clean data"
+CLEAN --> EDA : "Analyze data"
+EDA --> CLEAN  : "Refine based on findings"
+
+EDA  --> TRAIN : "Feed into training"
+TRAIN --> EVAL : "Assess model"
+
+EVAL --> DEPLOY : "Select best model"
+DEPLOY --> MAINT : "Deploy & monitor"
+MAINT --> PROC  : "Feedback loop"
+
+@enduml

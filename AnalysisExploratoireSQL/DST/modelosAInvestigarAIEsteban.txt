@@ -1,0 +1,11 @@
+sur le wiki :
+https://wiki.exo-partners.com:8443/display/DPED/Snippets+Exo+Partners
+https://wiki.exo-partners.com:8443/display/DPED/Architecture+Exo+Partners
+
+
+xgbus
+random forest
+
+xgboost
+
+mirar si estos modelos pueden calcular multiple outputs? 
