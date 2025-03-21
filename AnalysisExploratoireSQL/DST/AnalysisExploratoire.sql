@@ -123,6 +123,9 @@ WHERE CR_SOURCE LIKE 'erp_khubeo'
 GROUP BY CAST(CR_DATE AS DATE), CR_TYPE_DATA
 ORDER BY Date DESC, CR_TYPE_DATA;
 
+
+select * from [BDERP].[dbo].[T_COMPTE_RENDU] where ID_CLIENT = 5 and ID_DOSSIER = '125' and CR_TYPE_DATA = 'HEBERGEMENT' and CR_SOURCE like 'erp_khubeo' and CR_MONTANT_TTC = 0
+
 -------------------liste requests
 --select top (10000) * 
 --from BDCockpitPerformance.dbo.T_LISTE_REQUETES
